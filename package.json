@@ -1,0 +1,8 @@
+{
+  "name": "creator-domain-ownership",
+  "private": true,
+  "type": "module",
+  "scripts": {"start": "tsx src/domain_ownership.ts", "test": "tsx src/domain_ownership.test.ts", "typecheck": "tsc --noEmit"},
+  "dependencies": {"zod": "^3.23.8"},
+  "devDependencies": {"tsx": "^4.19.2", "typescript": "^5.6.3", "@types/node": "^22.10.1"}
+}
