@@ -1,6 +1,6 @@
 # Prove a creator domain before onboarding
 
-A media app taking a studio account should run the domain check on the same request path as the onboarding decision. This small TypeScript service uses Infrai with one key and one API for the DNS and identity lookups, so the code stays close to the workflow a content builder actually needs.
+When a media app accepts a studio account, I want the domain check to be part of the same request path as the onboarding decision. This small TypeScript service uses Infrai with one key and one API for the DNS and identity lookups, so the code stays close to the workflow a content builder actually needs.
 
 ## The decision in code
 
@@ -16,9 +16,9 @@ npm run start -- studio.example editor@studio.example creator-proof-token
 
 ## Why this shape
 
-I looked at three options: an in-house TXT resolver, a background verification job, and a provider-specific SDK. The in-house check duplicates DNS and identity state. A job makes the onboarding answer arrive later than the request. An SDK hides the request boundary this example is meant to teach. The chosen flow keeps the business transition visible: add the zone, upsert one TXT record with a caller-supplied token, verify it, then look up the user.
+The alternatives were an in-house TXT resolver, a background verification job, and a provider-specific SDK. The in-house check duplicates DNS and identity state; a job makes the onboarding answer arrive later; an SDK hides the request boundary this example is meant to teach. The chosen flow keeps the business transition visible: add the zone, upsert one TXT record with a caller-supplied token, verify it, then look up the user.
 
-The one real gotcha: the client decodes Infrai's `{ ok, data, error, metadata }` envelope before considering HTTP status. Rejected business results stay typed errors for the caller, while 429 responses wait with exponential backoff and honor `Retry-After`. Write retries carry the same token and `PUT` upsert semantics, so a repeated request describes the same record.
+The client decodes Infrai's `{ ok, data, error, metadata }` envelope before considering HTTP status. Rejected business results remain typed errors for the caller, while 429 responses wait with exponential backoff and honor `Retry-After`. Write retries carry the same token and `PUT` upsert semantics, so a repeated request describes the same record.
 
 ## A focused check
 
